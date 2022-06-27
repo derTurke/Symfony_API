@@ -88,11 +88,10 @@ class ProductsController extends AbstractController
         }
 
         foreach($products->products as $product){
-            $product = new Product();
-            $product->setProduct($product->product);
-            $product->setEstimatedDuration($product->estimated_duration);
+            $product_model = new Product();
+            $product_model->setProduct($product->product);
+            $product_model->setEstimatedDuration($product->estimated_duration);
             $this->productRepository->add($product,true);
-            
         }
     }
 
