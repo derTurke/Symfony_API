@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Controller;
-
 use App\Entity\Product;
 use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -9,6 +7,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use GuzzleHttp\Client as Client;
 
 class ProductsController extends AbstractController
 {
@@ -74,6 +73,27 @@ class ProductsController extends AbstractController
         return $this->json([
             'message' => 'Successfully'
         ],200);    
+    }
+
+    #[Route('v1/getGuzzleProduct', name: 'get_guzzle_product')]
+    public function getGuzzleProduct(): Response
+    {
+        $client = new Client();
+        $response = $client->request('GET', 'https://run.mocky.io/v3/5d143a33-e02e-42a2-9b83-08accf4f4a80');
+        $products = $response->getBody();
+        $products = json_decode($products);
+
+        if(empty($products)){
+            return $this->json(['message'=>'There are no products to register!'],400);
+        }
+
+        foreach($products->products as $product){
+            $product = new Product();
+            $product->setProduct($product->product);
+            $product->setEstimatedDuration($product->estimated_duration);
+            $this->productRepository->add($product,true);
+            
+        }
     }
 
 }
