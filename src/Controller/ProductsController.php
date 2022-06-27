@@ -91,8 +91,10 @@ class ProductsController extends AbstractController
             $product_model = new Product();
             $product_model->setProduct($product->product);
             $product_model->setEstimatedDuration($product->estimated_duration);
-            $this->productRepository->add($product,true);
+            $this->productRepository->add($product_model,true);
         }
+        return $this->json(['message'=>'Successfully'],200);
+
     }
 
 }
